@@ -12,15 +12,42 @@ public class PlayerController : NetworkBehaviour, IDamageable
     public float movementSpeed = 10f;
     public float rotationSpeed = 5f;
 
-    public Camera mainCamera;
+    public Transform cameraContainer;
+    public GameObject mainCamera;
     public CharacterController characterController;
 
     private float rotX = 0.0f;
 
     public Sword sword;
 
+    public bool isClientInit = false;
+
+    public override void OnStartClient()
+    {
+        base.OnStartClient();
+        if (!base.IsOwner)
+        {
+            GetComponent<PlayerController>().enabled = false;
+        }
+        else {
+            isClientInit = true;
+
+            mainCamera = GameManager.Instance.mainCamera;
+            mainCamera.transform.parent = cameraContainer;
+            mainCamera.transform.position = cameraContainer.position;
+            mainCamera.transform.rotation = cameraContainer.rotation;
+        }
+    }
+
+    private void Start()
+    {
+        characterController = GetComponent<CharacterController>();
+    }
+
     void Update()
     {
+        if (!isClientInit)
+            return;
 
         #region PLAYER MOVEMENT & VIEW
 

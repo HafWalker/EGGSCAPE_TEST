@@ -23,6 +23,8 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public GameObject mainCamera;
+
     private void Awake()
     {
         if (_instance != null && _instance != this)
