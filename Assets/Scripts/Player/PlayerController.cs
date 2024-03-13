@@ -1,10 +1,14 @@
+using FishNet.Object;
+using FishNet.Object.Synchronizing;
 using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour, IDamageable
+public class PlayerController : NetworkBehaviour, IDamageable
 {
+    [SyncVar] public float health;
+
     public float movementSpeed = 10f;
     public float rotationSpeed = 5f;
 
