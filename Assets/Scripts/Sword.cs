@@ -23,11 +23,11 @@ public class Sword : MonoBehaviour
         }
     }
 
-    public void OnCollision(Collision2D collision)
+    public void OnCollision(Collider col)
     {
-        if (collision.gameObject.GetComponent<IDamageable>() != null)
+        if (col.gameObject.GetComponent<IDamageable>() != null)
         {
-            collision.gameObject.GetComponent<IDamageable>().Takedamage(gameObject, damage);
+            col.gameObject.GetComponent<IDamageable>().Takedamage(gameObject, damage);
         }
     }
 }

@@ -111,7 +111,8 @@ MonoBehaviour:
   _componentIndexCache: 0
   _addedNetworkObject: {fileID: 6958391781184710702}
   _networkObjectCache: {fileID: 6958391781184710702}
-  health: 0
+  currentHealth: 0
+  maxHealt: 10
   movementSpeed: 10
   rotationSpeed: 5
   cameraContainer: {fileID: 9051075632518694054}
@@ -131,9 +132,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a23cf700c286f14693fad4e66c466a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _componentIndexCache: 255
+  _componentIndexCache: 1
   _addedNetworkObject: {fileID: 6958391781184710702}
-  _networkObjectCache: {fileID: 0}
+  _networkObjectCache: {fileID: 6958391781184710702}
 --- !u!114 &6958391781184710702
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -151,6 +152,7 @@ MonoBehaviour:
   <PredictedSpawn>k__BackingField: {fileID: 0}
   _networkBehaviours:
   - {fileID: 4294017376719961862}
+  - {fileID: 3007933492753253611}
   - {fileID: 8977110018002490364}
   <ParentNetworkObject>k__BackingField: {fileID: 0}
   <ChildNetworkObjects>k__BackingField: []
@@ -180,7 +182,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2836e36774ca1c4bbbee976e17b649c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _componentIndexCache: 1
+  _componentIndexCache: 2
   _addedNetworkObject: {fileID: 6958391781184710702}
   _networkObjectCache: {fileID: 6958391781184710702}
   _componentConfiguration: 1
@@ -225,8 +227,10 @@ GameObject:
   - component: {fileID: 5100090348524285560}
   - component: {fileID: 5710564682803300978}
   - component: {fileID: 5084645763227123493}
+  - component: {fileID: 1627664185887945817}
+  - component: {fileID: 6843204658010702707}
   m_Layer: 0
-  m_Name: Mesh
+  m_Name: MeshCollider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -318,6 +322,46 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &1627664185887945817
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1627245938409907378}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c074d700fa7282f46903a2570e82ff3b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sword: {fileID: 8877251255883017944}
+--- !u!54 &6843204658010702707
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1627245938409907378}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &2104425052791439424
 GameObject:
   m_ObjectHideFlags: 0

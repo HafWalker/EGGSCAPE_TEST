@@ -7,7 +7,12 @@ using UnityEngine;
 
 public class PlayerController : NetworkBehaviour, IDamageable
 {
-    [SyncVar] public float health;
+    #region HEALTH
+
+    [SyncVar] public float currentHealth;
+    [SerializeField] private float maxHealt = 10f;
+
+    #endregion
 
     public float movementSpeed = 10f;
     public float rotationSpeed = 5f;
@@ -46,6 +51,7 @@ public class PlayerController : NetworkBehaviour, IDamageable
     private void Start()
     {
         characterController = GetComponent<CharacterController>();
+        currentHealth = maxHealt;
     }
 
     void Update()
@@ -110,6 +116,20 @@ public class PlayerController : NetworkBehaviour, IDamageable
 
     public void Takedamage(GameObject gameObject, float value)
     {
-        //throw new System.NotImplementedException();
+        if (gameObject.transform != sword.transform)
+        {
+            currentHealth -= value;
+
+            if (currentHealth <= 0)
+            {
+                currentHealth = 0;
+                ResetHealth();
+            }
+        }
+    }
+
+    public void ResetHealth()
+    {
+        currentHealth = maxHealt;
     }
 }
