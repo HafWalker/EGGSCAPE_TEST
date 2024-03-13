@@ -22,6 +22,8 @@ public class PlayerController : NetworkBehaviour, IDamageable
 
     public bool isClientInit = false;
 
+    private PlayerNetworkSync playerNetworkSync;
+
     public override void OnStartClient()
     {
         base.OnStartClient();
@@ -36,6 +38,8 @@ public class PlayerController : NetworkBehaviour, IDamageable
             mainCamera.transform.parent = cameraContainer;
             mainCamera.transform.position = cameraContainer.position;
             mainCamera.transform.rotation = cameraContainer.rotation;
+
+            playerNetworkSync = GetComponent<PlayerNetworkSync>();
         }
     }
 
@@ -84,9 +88,11 @@ public class PlayerController : NetworkBehaviour, IDamageable
         if (Input.GetKeyDown(KeyCode.Space))
         {
             LocalAttack(true);
+            playerNetworkSync.AttackServer(this, true, TimeManager.Tick);
         }
         else if (Input.GetKeyUp(KeyCode.Space)) {
             LocalAttack(false);
+            playerNetworkSync.AttackServer(this, false, TimeManager.Tick);
         }
 
         #endregion
@@ -95,6 +101,11 @@ public class PlayerController : NetworkBehaviour, IDamageable
     public void LocalAttack(bool value) 
     {
         sword.Attack(value);
+    }
+
+    public void PerformAttackFromServer(PlayerController player, bool value, float timeDiff) 
+    {
+        sword.AttackPredict(value, timeDiff);
     }
 
     public void Takedamage(GameObject gameObject, float value)
