@@ -29,4 +29,18 @@ public class PlayerNetworkSync : NetworkBehaviour
         float timeDiff = (float)(TimeManager.Tick - startTick) / TimeManager.TickRate;
         p.PerformAttackFromServer(p, value, timeDiff);
     }
+
+    [ServerRpc]
+    public void UpdateHealth(PlayerController p, float value)
+    {
+        p.UpdatePlayerHealth(value);
+        UpdateHealthInOthers(p,value);
+    }
+
+    [ObserversRpc(ExcludeOwner = true)]
+    public void UpdateHealthInOthers(PlayerController p, float value) 
+    { 
+        p.UpdatePlayerHealth(value);
+    }
+
 }

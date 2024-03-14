@@ -1,9 +1,12 @@
 using FishNet.Object;
 using FishNet.Object.Synchronizing;
 using JetBrains.Annotations;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting.Dependencies.NCalc;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerController : NetworkBehaviour, IDamageable
 {
@@ -11,6 +14,8 @@ public class PlayerController : NetworkBehaviour, IDamageable
 
     [SyncVar] public float currentHealth;
     [SerializeField] private float maxHealt = 10f;
+
+    public Slider thirdPersonHealthSlider;
 
     #endregion
 
@@ -45,6 +50,8 @@ public class PlayerController : NetworkBehaviour, IDamageable
             mainCamera.transform.rotation = cameraContainer.rotation;
 
             playerNetworkSync = GetComponent<PlayerNetworkSync>();
+
+            transform.name = "Player_1" + base.OwnerId.ToString();
         }
     }
 
@@ -119,17 +126,28 @@ public class PlayerController : NetworkBehaviour, IDamageable
         if (gameObject.transform != sword.transform)
         {
             currentHealth -= value;
-
             if (currentHealth <= 0)
             {
                 currentHealth = 0;
-                ResetHealth();
             }
+
+            float healthSliderValue = currentHealth / maxHealt;
+            UIManager.Instance.firstPersonHealthSlider.value = healthSliderValue;
+
+            playerNetworkSync.UpdateHealth(this, currentHealth);
         }
+    }
+
+    public void UpdatePlayerHealth(float value) 
+    {
+        currentHealth = value;
+        float healthSliderValue = currentHealth / maxHealt;
+        thirdPersonHealthSlider.value = healthSliderValue;
     }
 
     public void ResetHealth()
     {
         currentHealth = maxHealt;
+        playerNetworkSync.UpdateHealth(this, maxHealt);
     }
 }
