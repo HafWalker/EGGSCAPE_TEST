@@ -1,3 +1,5 @@
+using FishNet.Component.Spawning;
+using FishNet.Managing;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -24,6 +26,9 @@ public class GameManager : MonoBehaviour
     }
 
     public GameObject mainCamera;
+    public Transform hoverCameraGizmo;
+
+    public PlayerSpawner playerSpawner;
 
     private void Awake()
     {
@@ -38,5 +43,4 @@ public class GameManager : MonoBehaviour
         }
 
     }
-
 }

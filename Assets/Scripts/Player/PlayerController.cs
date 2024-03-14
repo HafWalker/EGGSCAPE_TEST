@@ -52,6 +52,24 @@ public class PlayerController : NetworkBehaviour, IDamageable
             playerNetworkSync = GetComponent<PlayerNetworkSync>();
 
             transform.name = "Player_1" + base.OwnerId.ToString();
+
+            UIManager.Instance.SwitchLobbyPanel(false);
+        }
+
+    }
+
+    public override void OnStopClient()
+    {
+        base.OnStopClient();
+        if (base.IsOwner)
+        {
+            isClientInit = false;
+
+            mainCamera.transform.parent = GameManager.Instance.hoverCameraGizmo;
+            mainCamera.transform.position = GameManager.Instance.hoverCameraGizmo.position;
+            mainCamera.transform.rotation = GameManager.Instance.hoverCameraGizmo.rotation;
+
+            UIManager.Instance.SwitchLobbyPanel(true);
         }
     }
 
@@ -149,5 +167,16 @@ public class PlayerController : NetworkBehaviour, IDamageable
     {
         currentHealth = maxHealt;
         playerNetworkSync.UpdateHealth(this, maxHealt);
+    }
+
+    public void PlayerDead() 
+    {
+        mainCamera.transform.parent = GameManager.Instance.hoverCameraGizmo;
+        mainCamera.transform.position = GameManager.Instance.hoverCameraGizmo.position;
+        mainCamera.transform.rotation = GameManager.Instance.hoverCameraGizmo.rotation;
+
+        UIManager.Instance.SwitchLobbyPanel(true);
+
+        this.gameObject.SetActive(false);
     }
 }

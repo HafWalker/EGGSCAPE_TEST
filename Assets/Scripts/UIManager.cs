@@ -23,8 +23,11 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    public Slider firstPersonHealthSlider;
 
+    public GameObject gameOverPanel;
+
+    public Slider firstPersonHealthSlider;
+    
     private void Awake()
     {
         if (_instance != null && _instance != this)
@@ -37,5 +40,16 @@ public class UIManager : MonoBehaviour
             DontDestroyOnLoad(gameObject);
         }
 
+    }
+
+    private void Start()
+    {
+        SwitchLobbyPanel(true);
+    }
+
+    public void SwitchLobbyPanel(bool value) 
+    {
+        gameOverPanel.SetActive(value);
+        firstPersonHealthSlider.gameObject.SetActive(!value);
     }
 }
