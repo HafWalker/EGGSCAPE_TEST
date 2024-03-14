@@ -1,10 +1,12 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Basic Constant Rotation
+/// </summary>
 public class ConstantRotation : MonoBehaviour
 {
-    public float rotationSpeed = 10f;
+    [SerializeField]
+    private float rotationSpeed = 10f;
 
     void Update()
     {

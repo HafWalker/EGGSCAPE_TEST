@@ -904,7 +904,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3d48b33d13dea9c40aba126331c93859, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameOverPanel: {fileID: 147435211}
+  lobbyPanel: {fileID: 147435211}
   firstPersonHealthSlider: {fileID: 1034242988}
 --- !u!1 &976318947
 GameObject:
@@ -1405,7 +1405,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mainCamera: {fileID: 781972278}
   hoverCameraGizmo: {fileID: 1433155307}
-  playerSpawner: {fileID: 0}
 --- !u!1 &1395179410
 GameObject:
   m_ObjectHideFlags: 0

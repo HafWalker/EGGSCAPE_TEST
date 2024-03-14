@@ -5,8 +5,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// GameManager Script
+/// Es el escript principal de Juego y es quien debe controlar el estado del mismo
+/// En el caso particular de este proyecto solo mantiene referencias a la camara
+/// </summary>
 public class GameManager : MonoBehaviour
 {
+    #region SINGLETON
+
     private static GameManager _instance;
     public static GameManager Instance
     {
@@ -25,10 +32,21 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    #endregion
+
+    #region GENERAL REFERENCES
+    // En este caso y para simplificar las variables son publicas y asignadas por inspector
+    // En caso de ser necesario se pueden volver privadas y con sus respectivos Gets y Sets
+
+    // Referencias a la camara principal para emparentar segun sea necesario
     public GameObject mainCamera;
+
+    // Referencia a un gizmo hover para el estado previo al juego
     public Transform hoverCameraGizmo;
 
-    public PlayerSpawner playerSpawner;
+    #endregion
+
+    #region AWAKE
 
     private void Awake()
     {
@@ -41,6 +59,7 @@ public class GameManager : MonoBehaviour
             _instance = this;
             DontDestroyOnLoad(gameObject);
         }
-
     }
+
+    #endregion
 }
