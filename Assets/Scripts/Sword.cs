@@ -27,7 +27,7 @@ public class Sword : MonoBehaviour
         animator.SetBool("Attack", value);
     }
 
-    // Metodo apra replicar el ataque sincronizado en los clientes
+    // Metodo para replicar el ataque sincronizado en los clientes
     public void AttackPredict(bool value, float delayTime)
     {
         // Se setea el bool del animator

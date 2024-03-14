@@ -27,6 +27,7 @@ public class PlayerNetworkSync : NetworkBehaviour
     }
 
     // Llamada a los cliente para replicar el estado de un ataque con su respectivo Tick de ejecucion
+    // Este metodo exluye al Owner de este cliente
     [ObserversRpc(ExcludeOwner = true)]
     public void Attack(PlayerController p, bool value, uint startTick)
     {
@@ -36,17 +37,25 @@ public class PlayerNetworkSync : NetworkBehaviour
         p.PerformAttackFromServer(p, value, timeDiff);
     }
 
+    // Metodo para actualizar la vida del Jugador en el servidor
+    // La variable Health esta sincronizada en el servidor al modificarse localmente
+    // Pero es necesario replicar el cambio en los clientes
     [ServerRpc]
     public void UpdateHealth(PlayerController p, float value)
     {
-        p.UpdatePlayerHealth(value);
-        UpdateHealthInOthers(p,value);
+        // Se replica el cambio de la vida de este jugador en el resto de los Clientes
+        p.currentHealth = value;
+
+        // Finalmente avisamos a los Clientes para que actualicen su UI
+        UpdateHealthInOthers(p);
     }
 
+    // Metodo para actualizar el cambio de vida de un cliente en el resto
+    // Este metodo exluye al Owner de este cliente
     [ObserversRpc(ExcludeOwner = true)]
-    public void UpdateHealthInOthers(PlayerController p, float value) 
+    public void UpdateHealthInOthers(PlayerController p) 
     { 
-        p.UpdatePlayerHealth(value);
+        p.UpdatePlayerHealth();
     }
 
 }

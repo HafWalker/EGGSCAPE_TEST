@@ -43,7 +43,7 @@ public class UIManager : MonoBehaviour
 
     #endregion
 
-    #region AWAKE and STAR
+    #region AWAKE and START
 
     private void Awake()
     {

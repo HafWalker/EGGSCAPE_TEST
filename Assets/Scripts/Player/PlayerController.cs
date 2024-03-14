@@ -1,6 +1,7 @@
 using FishNet.Object;
 using FishNet.Object.Synchronizing;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 /// <summary>
@@ -12,20 +13,22 @@ public class PlayerController : NetworkBehaviour, IDamageable
 {
     #region HEALTH
 
-    [SyncVar] public float currentHealth;
-    [SerializeField] private float maxHealt = 10f;
+    [SyncVar] public float currentHealth; // Valor de la vida actual del jugador sincronizada
 
-    public Slider thirdPersonHealthSlider;
+    [SerializeField] 
+    private float maxHealt = 10f; // valor maximo por defecto de la vida del jugador
+
+    public Slider thirdPersonHealthSlider; // Referencia la Slider en 3ra persona
 
     #endregion
 
     #region MOVEMENT VARIABLES
 
     [SerializeField]
-    private float movementSpeed = 10f;
+    private float movementSpeed = 10f; // Velocidad de movimiento del jugador
 
     [SerializeField]
-    private float rotationSpeed = 5f;
+    private float rotationSpeed = 5f; // Velocidad de rotacion de la camara del jugador (Transfiere su rotacion al propio transform en el eje Z)
 
     #endregion
 
@@ -221,10 +224,11 @@ public class PlayerController : NetworkBehaviour, IDamageable
     }
 
     // Este metodo actualiza la barra de vida en tercera persona para el resto de los jugadores
-    public void UpdatePlayerHealth(float value) 
+    public void UpdatePlayerHealth() 
     {
-        currentHealth = value;
         float healthSliderValue = currentHealth / maxHealt;
+
+        // Asignacion del valor del slider en 3ra persona en funcion de la vida actual del jugador
         thirdPersonHealthSlider.value = healthSliderValue;
     }
 
