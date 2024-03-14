@@ -54,6 +54,8 @@ public class PlayerController : NetworkBehaviour, IDamageable
 
     #endregion
 
+    #region FISHNET CLIENT EVENTS
+
     // Evento de FishNet al iniciar el Cliente
     public override void OnStartClient()
     {
@@ -81,6 +83,9 @@ public class PlayerController : NetworkBehaviour, IDamageable
             // Asignacion de un nombre al jugador en base a su Id (Para distinguir los clones)
             transform.name = "Player_1" + base.OwnerId.ToString();
 
+            // Seteo la vida actual del jugador a su valor maximo
+            currentHealth = maxHealt;
+
             // LLamada al UIManager para intercambiar el panel de lobby a la UI del jugador
             UIManager.Instance.SwitchLobbyPanel(false);
         }
@@ -106,13 +111,12 @@ public class PlayerController : NetworkBehaviour, IDamageable
         }
     }
 
+    #endregion
+
     private void Start()
     {
         // Al inicio del script obtengo la referencia del CharacterController
         characterController = GetComponent<CharacterController>();
-
-        // Seteo la vida actual del jugador a su valor maximo
-        currentHealth = maxHealt;
     }
 
     void Update()
@@ -191,7 +195,7 @@ public class PlayerController : NetworkBehaviour, IDamageable
 
     // Este metodo es llamado por el servidor en los Cliente para ejecutar el ataque
     // El metodo recibe un timeDiff que se utiliza en el arma para predecir la diferencia de tiempo
-    // entre la ejecucion del ataque en el cliente al servidor y su replica en el resto de los clientes
+    // entre la ejecucion del ataque en el Cliente original y su replica en el resto de los clientes
     public void PerformAttackFromServer(PlayerController player, bool value, float timeDiff) 
     {
         // Llamada al metodo de ataque predictivo del arma
