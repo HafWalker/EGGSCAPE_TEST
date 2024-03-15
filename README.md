@@ -4,7 +4,8 @@ Descripcion:
 
 Juego multijugador simple de combate mele implementando FishNet
 
-Cada instancia de juego puede decidir si funciona como Servidor, Cliente o Servidor y Cliente al mismo tiempo. Se utiliza la interfaz de FishNet
+Cada instancia de juego puede decidir si funciona como Servidor, Cliente o Servidor y Cliente al mismo tiempo. 
+Se utiliza la interfaz de FishNet
 
 Cada instancia de jugador controlar un personaje en primera persona que puede moverse con A-W-S-D, controlar su direccion con el mouse y efectuar un ataque con la tecla Espacio
 Cada instancia de jugador posee una UI simple en primera persona para mostrar su vida actual y una en 3ra persona para mostrar lo mismo al resto de los clientes
@@ -33,6 +34,7 @@ Script Interfaces
 Arquitectura:
 
 La estructura basica del juego es controlada por el GameManager
+
 El UIManager se encarga de actualizar los cambios en la UI general
 
 El PlayerController se encarga de los movimientos y acciones del jugador asi como de avisar al networkManager de sus cambios de estado y acciones
