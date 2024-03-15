@@ -1,11 +1,7 @@
 ﻿using FishNet.Object;
 using FishNet.Object.Synchronizing;
 using FishNet.Transporting;
-using System;
-using UnityEditor.PackageManager;
-using UnityEditor;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.UI;
 
 /// <summary>
@@ -227,6 +223,7 @@ public class PlayerController : NetworkBehaviour, IDamageable
             if (currentHealth <= 0)
             {
                 currentHealth = 0;
+                ResetHealth();
             }
 
             // Local lifeBar update in first person
@@ -246,21 +243,6 @@ public class PlayerController : NetworkBehaviour, IDamageable
 
         // Notification to the server about the change
         playerNetworkSync.UpdateHealth(this, maxHealt);
-    }
-
-    // Method that controls the situation in case the player loses all his life
-    public void PlayerDead() 
-    {
-        // I move the camera from the Player to the GameManager
-        mainCamera.transform.parent = GameManager.Instance.hoverCameraGizmo;
-        mainCamera.transform.position = GameManager.Instance.hoverCameraGizmo.position;
-        mainCamera.transform.rotation = GameManager.Instance.hoverCameraGizmo.rotation;
-
-        // Switch to lobby panel
-        UIManager.Instance.SwitchLobbyPanel(true);
-
-        // I deactivate this GameObject (The player)
-        this.gameObject.SetActive(false);
     }
 
     #endregion
