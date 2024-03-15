@@ -53,7 +53,7 @@ El juego optimiza con prediccion del lado del cliente la deteccion de los ataque
 
 **Problemas enfrentados:**
 
-Principalmente la integracion de Fish-Net ya que nunca antes lo habia utilizado.
+Principalmente la integracion de Fish-Net ya que nunca antes habia utilizado.
 
 Me tomo un tiempo entender como sincronizar variables y aprender sobre client-prediction ya que si bien trabaje sistemas de multiplayer antes, el optimizado de latencia no es algo que enfrentara muy a menudo.
 
