@@ -13,8 +13,8 @@ public class PlayerNetworkSync : NetworkBehaviour
         // De la misma manera que se trabaja en el PlayerController
         // Desactivo el scrip en caso de no perteneces al Owner del Cliente
         base.OnStartClient();
-        if (!base.IsOwner) 
-        { 
+        if (!base.IsOwner)
+        {
             GetComponent<PlayerNetworkSync>().enabled = false;
         }
     }
@@ -45,17 +45,6 @@ public class PlayerNetworkSync : NetworkBehaviour
     {
         // Se replica el cambio de la vida de este jugador en el resto de los Clientes
         p.currentHealth = value;
-
-        // Finalmente avisamos a los Clientes para que actualicen su UI
-        UpdateHealthInOthers(p);
     }
-
-    // Metodo para actualizar el cambio de vida de un cliente en el resto
-    // Este metodo exluye al Owner de este cliente
-    [ObserversRpc(ExcludeOwner = true)]
-    public void UpdateHealthInOthers(PlayerController p) 
-    { 
-        p.UpdatePlayerHealth();
-    }
-
+  
 }

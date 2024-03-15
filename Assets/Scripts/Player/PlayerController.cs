@@ -1,5 +1,7 @@
 using FishNet.Object;
 using FishNet.Object.Synchronizing;
+using FishNet.Transporting;
+using System;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -13,22 +15,25 @@ public class PlayerController : NetworkBehaviour, IDamageable
 {
     #region HEALTH
 
-    [SyncVar] public float currentHealth; // Valor de la vida actual del jugador sincronizada
+    // This currentHealth var is synchronized in the server
+    // The parrameters ares mostly default but I add an callback method to update de health view
+    [SyncVar(Channel = Channel.Unreliable, ReadPermissions = ReadPermission.Observers, SendRate = 0.1f,  OnChange = nameof(OnHealthChange))] 
+    public float currentHealth;
 
     [SerializeField] 
-    private float maxHealt = 10f; // valor maximo por defecto de la vida del jugador
+    private float maxHealt = 10f; // Tha max value of Health
 
-    public Slider thirdPersonHealthSlider; // Referencia la Slider en 3ra persona
+    public Slider thirdPersonHealthSlider; // 3rd person health slider reference
 
     #endregion
 
     #region MOVEMENT VARIABLES
 
     [SerializeField]
-    private float movementSpeed = 10f; // Velocidad de movimiento del jugador
+    private float movementSpeed = 10f; // The player movement speed
 
     [SerializeField]
-    private float rotationSpeed = 5f; // Velocidad de rotacion de la camara del jugador (Transfiere su rotacion al propio transform en el eje Z)
+    private float rotationSpeed = 5f; // Camera rotation speed (This is used for transform Z rotation)
 
     #endregion
 
@@ -227,13 +232,20 @@ public class PlayerController : NetworkBehaviour, IDamageable
         }
     }
 
-    // Este metodo actualiza la barra de vida en tercera persona para el resto de los jugadores
-    public void UpdatePlayerHealth() 
+    // This Method is called in the observers when is a change in the sync currentHealth var
+    public void OnHealthChange(float oldValue, float newValue, bool asServer)
     {
-        float healthSliderValue = currentHealth / maxHealt;
+        if (!asServer)
+        {
+            // Assign the new currentHealth value
+            currentHealth = newValue;
 
-        // Asignacion del valor del slider en 3ra persona en funcion de la vida actual del jugador
-        thirdPersonHealthSlider.value = healthSliderValue;
+            // Now we have a new variable with the normaliced value of the current health (Between 0 and 1)
+            float healthSliderValue = currentHealth / maxHealt;
+
+            // Now we assign the new value to the 3rd person healthBar
+            thirdPersonHealthSlider.value = healthSliderValue;
+        }
     }
 
     // Reseteo del Health del jugador
