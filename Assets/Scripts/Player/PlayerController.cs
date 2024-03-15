@@ -1,19 +1,21 @@
-using FishNet.Object;
+﻿using FishNet.Object;
 using FishNet.Object.Synchronizing;
 using FishNet.Transporting;
 using System;
+using UnityEditor.PackageManager;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
 /// <summary>
 /// PlayerController Scrip
-/// Este escript es el responsable de controllar los movimientos y acciones del Jugador
-/// Contiene ademas una variables sincronizada de Health
+/// This script is responsible for controlling the movements and actions of the Player
+/// Also contains a synchronized Health variable and implements the IDamageable interface
 /// </summary>
 public class PlayerController : NetworkBehaviour, IDamageable
 {
-    #region HEALTH
+    #region HEALTH VARIABLES
 
     // This currentHealth var is synchronized in the server
     // The parrameters ares mostly default but I add an callback method to update de health view
@@ -21,7 +23,7 @@ public class PlayerController : NetworkBehaviour, IDamageable
     public float currentHealth;
 
     [SerializeField] 
-    private float maxHealt = 10f; // Tha max value of Health
+    private float maxHealt = 10f; // The max value of Health
 
     public Slider thirdPersonHealthSlider; // 3rd person health slider reference
 
@@ -39,44 +41,44 @@ public class PlayerController : NetworkBehaviour, IDamageable
 
     #region PUBLIC REFERENCES
 
-    public Transform cameraContainer;
-    
-    public GameObject mainCamera;
+    public Transform cameraContainer; // Camera container Reference inside the Player Trasnform
 
-    public CharacterController characterController;
-
-    public Sword sword;
+    public Sword sword; // Sword weapon script reference
 
     #endregion
 
     #region PRIVATE VARIABLES
 
-    private float rotX = 0.0f;
+    private float rotX = 0.0f; // Variable to keep the clamped mouse rotation values in X axis
 
-    private bool isClientInit = false;
+    private bool isClientInit = false; // Flag to verify if the client is started
     
-    private PlayerNetworkSync playerNetworkSync;
+    private PlayerNetworkSync playerNetworkSync; // PlayerNetworkSync script reference
 
+    private CharacterController characterController; // Character Controller reference
+
+    private GameObject mainCamera; // Main Camera Reference
+    
     #endregion
 
     #region FISHNET CLIENT EVENTS
 
-    // Evento de FishNet al iniciar el Cliente
+    // FishNet event on start Client
     public override void OnStartClient()
     {
         base.OnStartClient();
         if (!base.IsOwner)
         {
-            // FishNet me indica si este objeto es o no el Owner del Cliente
-            // Para evitar controlar a otras instancias de jugadores, desactivo el script
+            // FishNet tells me whether or not this object is the Owner of the Client
+            // To avoid controlling other player instances, I disable the script
             GetComponent<PlayerController>().enabled = false;
         }
         else {
-            // En caso de ser este objeto el Owner del Cliente
-            // Esta bandera es necesaria para prevenir que se ejecute el update antes de que este listo el cliente
+            // If this object is the Owner of the Client
+            // This flag is necessary to prevent the update from being executed before the client is ready
             isClientInit = true;
 
-            // Obtengo la referencia de la mainCamera del GameManager y se la asigno a el jugador
+            // Get the mainCamera reference from the GameManager and assign it to the player
             mainCamera = GameManager.Instance.mainCamera;
             mainCamera.transform.parent = cameraContainer;
             mainCamera.transform.position = cameraContainer.position;
@@ -85,51 +87,52 @@ public class PlayerController : NetworkBehaviour, IDamageable
             // Get del componente PlayerNetworkSync
             playerNetworkSync = GetComponent<PlayerNetworkSync>();
 
-            // Asignacion de un nombre al jugador en base a su Id (Para distinguir los clones)
+            // Assigning a name to the player based on their ID (To distinguish clones)
             transform.name = "Player_1" + base.OwnerId.ToString();
 
-            // Seteo la vida actual del jugador a su valor maximo
+            // Set the player's current life to its maximum value
             currentHealth = maxHealt;
 
-            // LLamada al UIManager para intercambiar el panel de lobby a la UI del jugador
+            // Call to UIManager to swap the lobby panel to the player UI
             UIManager.Instance.SwitchLobbyPanel(false);
         }
     }
 
-    // Evento de FishNet al detener el Cliente
+    // FishNet event when stopping the Client
     public override void OnStopClient()
     {
         base.OnStopClient();
         if (base.IsOwner)
         {
-            // En caso de que se detenga el Cliente por alguna razon
-            // Desactivo la bandera para evitar que el update siga funcionando
+            // In case the Client stops for some reason
+            // I disable the flag to prevent the update from continuing to work
             isClientInit = false;
 
-            // Se obtiene la referencia del Gizmo en el GameManager y se asigna la camara
+            // The Gizmo reference is obtained in the GameManager and the camera is assigned
             mainCamera.transform.parent = GameManager.Instance.hoverCameraGizmo;
             mainCamera.transform.position = GameManager.Instance.hoverCameraGizmo.position;
             mainCamera.transform.rotation = GameManager.Instance.hoverCameraGizmo.rotation;
 
-            // LLamada al UIManager para intercambiar al lobbyPanel
+            // Call to UIManager to exchange lobbyPanel
             UIManager.Instance.SwitchLobbyPanel(true);
         }
     }
 
     #endregion
 
+    #region START ADN UPDATED
+
     private void Start()
     {
-        // Al inicio del script obtengo la referencia del CharacterController
+        // At the beginning of the script I get the reference of the CharacterController
         characterController = GetComponent<CharacterController>();
     }
 
     void Update()
     {
-
         #region CLIENT CHECK
 
-        // Verificacion de bandera para asegurarme de que no se ejecute el update antes de que el Cliente este listo
+        // Flag check to make sure the update is not run before the Client is ready
         if (!isClientInit)
             return;
 
@@ -137,7 +140,7 @@ public class PlayerController : NetworkBehaviour, IDamageable
 
         #region PLAYER MOVEMENT & VIEW
 
-        // Obtengo los valores de X e Y del mouse para asigna rotacion a la camamara en primera persona
+        // I get the X and Y values ​​of the mouse to assign rotation to the camera in first person
         float rotY = Input.GetAxis("Mouse X") * rotationSpeed;
         rotX -= Input.GetAxis("Mouse Y") * rotationSpeed;
 
@@ -146,7 +149,7 @@ public class PlayerController : NetworkBehaviour, IDamageable
         transform.Rotate(0, rotY, 0);
         mainCamera.transform.localRotation = Quaternion.Euler(rotX, 0, 0);
 
-        // Creo dos variables horizontal y vertical que van a servir de vector direccion para el movimiento del jugador
+        // I create two horizontal and vertical variables that will serve as direction vector for the player movement
         float horizontalInput = 0f;
         float verticalInput = 0f;
 
@@ -163,74 +166,106 @@ public class PlayerController : NetworkBehaviour, IDamageable
         moveDirection = transform.TransformDirection(moveDirection);
         moveDirection *= movementSpeed;
 
-        // Con el vector direccion del jugador y su velocidad, desplazo el CharacterController
+        // With the direction vector of the player and his speed, I move the CharacterController
         characterController.Move(moveDirection * Time.deltaTime);
 
         #endregion
 
         #region PLAYER ATTACK
 
-        // Detectando la tecla "Espacio" (SpaceBar) sincronizo el ataque del jugador con el servidor
+        // Detecting the "Space" key (SpaceBar) I synchronize the player's attack with the server
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            // Ejecuto el ataque localmente
+            // Execute the attack locally
             LocalAttack(true);
 
-            // Aviso al servidor que se realizo el ataque y envio una referencia del Tick para sincronizar con el resto de los clientes
+            // Notification to the server that the attack was carried out and sent a Tick reference to synchronize with the rest of the clients
             playerNetworkSync.AttackServer(this, true, TimeManager.Tick);
         }
         else if (Input.GetKeyUp(KeyCode.Space)) {
 
-            // Cancelo el ataque localmente
+            // Cancel the attack locally
             LocalAttack(false);
 
-            // Aviso al servidor de la cancelacion del ataque y envio una referencia del Tick para sincronizar con el resto de los clientes
+            // Notify the server of the cancellation of the attack and send a Tick reference to synchronize with the rest of the clients
             playerNetworkSync.AttackServer(this, false, TimeManager.Tick);
         }
 
         #endregion
     }
 
-    // Metodo para realizar el ataque local
+    #endregion
+
+    #region METHODS
+
+    // Method to carry out the local attack
     public void LocalAttack(bool value) 
     {
-        // LLamada al metodo "Attack" del arma
+        // Call to the "Attack" method of the weapon
         sword.Attack(value);
     }
 
-    // Este metodo es llamado por el servidor en los Cliente para ejecutar el ataque
-    // El metodo recibe un timeDiff que se utiliza en el arma para predecir la diferencia de tiempo
-    // entre la ejecucion del ataque en el Cliente original y su replica en el resto de los clientes
+    // This method is called by the Server on the Client to execute the attack
+    // The method receives a timeDiff that is used in the weapon to predict the time difference
+    // between the execution of the attack on the original Client and its replication on the rest of the clients
     public void PerformAttackFromServer(PlayerController player, bool value, float timeDiff) 
     {
-        // Llamada al metodo de ataque predictivo del arma
+        // Call to the weapon's predictive attack method
         sword.AttackPredict(value, timeDiff);
     }
 
-    // Este metodo se encarga de procesar el da�o rebicido por el jugador de forma local
+    // This method is responsible for processing the damage received by the player locally
     public void Takedamage(GameObject weapon, float damage)
     {
-        // Antes que nada se verifica que el arma atacante no es la propia del jugador
+        // First of all it is verified that the attacking weapon is not the player's own
         if (weapon.transform != sword.transform)
         {
-
-            // Disminucion de la variable sincronizada Health
+            // Decrease the synchronized variable Health
             currentHealth -= damage;
 
-            // Verificacion de vida por debajo de 0
+            // Life check below 0
             if (currentHealth <= 0)
             {
                 currentHealth = 0;
             }
 
-            // Actualizacion local de la barra de vida en primera persona
+            // Local lifeBar update in first person
             float healthSliderValue = currentHealth / maxHealt;
             UIManager.Instance.firstPersonHealthSlider.value = healthSliderValue;
 
-            // Notificacion al servidor sobre el cambio
+            // Notification to the server about the change
             playerNetworkSync.UpdateHealth(this, currentHealth);
         }
     }
+
+    // Reset the player's health
+    public void ResetHealth()
+    {
+        // Local reset
+        currentHealth = maxHealt;
+
+        // Notification to the server about the change
+        playerNetworkSync.UpdateHealth(this, maxHealt);
+    }
+
+    // Method that controls the situation in case the player loses all his life
+    public void PlayerDead() 
+    {
+        // I move the camera from the Player to the GameManager
+        mainCamera.transform.parent = GameManager.Instance.hoverCameraGizmo;
+        mainCamera.transform.position = GameManager.Instance.hoverCameraGizmo.position;
+        mainCamera.transform.rotation = GameManager.Instance.hoverCameraGizmo.rotation;
+
+        // Switch to lobby panel
+        UIManager.Instance.SwitchLobbyPanel(true);
+
+        // I deactivate this GameObject (The player)
+        this.gameObject.SetActive(false);
+    }
+
+    #endregion
+
+    #region EVENTS
 
     // This Method is called in the observers when is a change in the sync currentHealth var
     public void OnHealthChange(float oldValue, float newValue, bool asServer)
@@ -248,28 +283,5 @@ public class PlayerController : NetworkBehaviour, IDamageable
         }
     }
 
-    // Reseteo del Health del jugador
-    public void ResetHealth()
-    {
-        // Reseteo local
-        currentHealth = maxHealt;
-
-        // Notificacion al servidor sobre el cambio
-        playerNetworkSync.UpdateHealth(this, maxHealt);
-    }
-
-    // Metodo que controla la situacion en caso de que el jugador pierda toda su vida
-    public void PlayerDead() 
-    {
-        // Muevo la camara del Jugador al GameManager
-        mainCamera.transform.parent = GameManager.Instance.hoverCameraGizmo;
-        mainCamera.transform.position = GameManager.Instance.hoverCameraGizmo.position;
-        mainCamera.transform.rotation = GameManager.Instance.hoverCameraGizmo.rotation;
-
-        // Intercambio al panel de lobby
-        UIManager.Instance.SwitchLobbyPanel(true);
-
-        // Desactivo este GameObject (El jugador)
-        this.gameObject.SetActive(false);
-    }
+    #endregion
 }
