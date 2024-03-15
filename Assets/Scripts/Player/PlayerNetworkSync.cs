@@ -2,16 +2,16 @@ using FishNet.Object;
 
 /// <summary>
 /// PlayerNetworkSync Scrip
-/// Contiene los metodo de comunicacion entre el Cliente y el Servidor
-/// (Encontre esta manera de manejar las llamadas en algun video sobre la implementacion de FishNet
-/// y me parecio el mas prolijo)
+/// Contains the communication methods between the Client and the Server
+/// (I found this way of handling calls in some video about FishNet implementation
+/// and it seemed like the most verbose to me)
 /// </summary>
 public class PlayerNetworkSync : NetworkBehaviour
 {
     public override void OnStartClient()
     {
-        // De la misma manera que se trabaja en el PlayerController
-        // Desactivo el scrip en caso de no perteneces al Owner del Cliente
+        // In the same way as working in the PlayerController
+        // I deactivate the script if you do not belong to the Client Owner
         base.OnStartClient();
         if (!base.IsOwner)
         {
@@ -19,31 +19,31 @@ public class PlayerNetworkSync : NetworkBehaviour
         }
     }
 
-    // Aviso al servidor sobre un ataque realizado o no con su respectivo tick de ejecucion
+    // Notification to the server about an attack carried out or not with its respective execution tick
     [ServerRpc]
     public void AttackServer(PlayerController p, bool value, uint startTick)
     {
         Attack(p, value, startTick);
     }
 
-    // Llamada a los cliente para replicar el estado de un ataque con su respectivo Tick de ejecucion
-    // Este metodo exluye al Owner de este cliente
+    // Call to clients to replicate the state of an attack with its respective execution Tick
+    // This method excludes the Owner of this client
     [ObserversRpc(ExcludeOwner = true)]
     public void Attack(PlayerController p, bool value, uint startTick)
     {
-        // Calculo de diferencia entre el tiempo de ejecucion del ataque y su llegada al servidor
-        // El valor se utiliza para predecir el tiempo que deben adelantar el ataque los clientes
+        // Calculation of the difference between the execution time of the attack and its arrival at the server
+        // The value is used to predict how long clients should advance the attack
         float timeDiff = (float)(TimeManager.Tick - startTick) / TimeManager.TickRate;
         p.PerformAttackFromServer(p, value, timeDiff);
     }
 
-    // Metodo para actualizar la vida del Jugador en el servidor
-    // La variable Health esta sincronizada en el servidor al modificarse localmente
-    // Pero es necesario replicar el cambio en los clientes
+    // Method to update the Player's life on the server
+    // The Health variable is synchronized on the server when modified locally
+    // But it is necessary to replicate the change on the clients
     [ServerRpc]
     public void UpdateHealth(PlayerController p, float value)
     {
-        // Se replica el cambio de la vida de este jugador en el resto de los Clientes
+        // The change in this player's life is replicated in the rest of the Clients
         p.currentHealth = value;
     }
   

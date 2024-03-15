@@ -7,8 +7,8 @@ using UnityEngine;
 
 /// <summary>
 /// GameManager Script
-/// Es el escript principal de Juego y es quien debe controlar el estado del mismo
-/// En el caso particular de este proyecto solo mantiene referencias a la camara
+/// It is the main Game script and is the one who must control its status
+/// In the particular case of this project it only maintains references to the camera
 /// </summary>
 public class GameManager : MonoBehaviour
 {
@@ -35,13 +35,14 @@ public class GameManager : MonoBehaviour
     #endregion
 
     #region GENERAL REFERENCES
-    // En este caso y para simplificar las variables son publicas y asignadas por inspector
-    // En caso de ser necesario se pueden volver privadas y con sus respectivos Gets y Sets
 
-    // Referencias a la camara principal para emparentar segun sea necesario
+    // In this case and to simplify the variables are public and assigned by inspector
+    // If necessary, they can be made private and with their respective Gets and Sets
+
+    // References to the main camera to match as necessary
     public GameObject mainCamera;
 
-    // Referencia a un gizmo hover para el estado previo al juego
+    // Reference to a gizmo hover for the pre-game state
     public Transform hoverCameraGizmo;
 
     #endregion

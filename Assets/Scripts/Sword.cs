@@ -1,10 +1,10 @@
 using UnityEngine;
 
 /// <summary>
-/// Sword Scrip
-/// Este script es el que se asigna al arma mele 
-/// Contiene su damage y metodos de ataque / Colision
-/// Tambien conteien una referencia al animator
+///Sword Script
+/// This script is the one assigned to the mele weapon
+/// Contains its damage and attack methods / Collision
+/// They also contain a reference to the animator
 /// </summary>
 public class Sword : MonoBehaviour
 {
@@ -20,32 +20,32 @@ public class Sword : MonoBehaviour
 
     #region METHODS
 
-    // Metodo para efectuar el ataque local
+    // Method to carry out the local attack
     public void Attack(bool value)
     {
-        // Se seteal el flag del animator
+        // The animator flag is set
         animator.SetBool("Attack", value);
     }
 
-    // Metodo para replicar el ataque sincronizado en los clientes
+    // Method to replicate the synchronized attack on clients
     public void AttackPredict(bool value, float delayTime)
     {
-        // Se setea el bool del animator
+        // The animator bool is set
         animator.SetBool("Attack", value);
         if (value)
         {
-            // En caso de que el ataque se este efectuando (No cancelando), se calcula el inicio de la animacion en funcion del delay definido por el server
+            // In case the attack is being carried out (Not canceling), the start of the animation is calculated based on the delay defined by the server
             animator.Play("SwordAttack", -1, delayTime / animator.GetCurrentAnimatorClipInfo(0).Length);
         }
     }
 
-    // Metodo que recibe el Collider con el que se encontro el Trigger
+    // Method that receives the Collider that the Trigger encountered
     public void OnCollision(Collider col)
     {
-        // Verifico que el Collider implementa la interfaz IDamageable
+        // Verify that the Collider implements the Idamageable interface
         if (col.gameObject.GetComponent<IDamageable>() != null)
         {
-            // En caso de que si, llamo a su respectivo metodo "TakeDamage" pasando un referencia de si misma 
+            // If yes, call its respective method "TakeDamage" passing a reference of itself
             col.gameObject.GetComponent<IDamageable>().Takedamage(gameObject, damage);
         }
     }

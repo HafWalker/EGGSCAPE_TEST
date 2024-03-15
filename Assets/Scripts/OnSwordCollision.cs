@@ -1,16 +1,16 @@
 using UnityEngine;
 
 /// <summary>
-/// OnSwordCollision Scrip
-/// Este scrip se asigna al collider (Trigger) del arma 
-/// y se encarga de pasar el dato del otro collider a la misma
+/// OnSwordCollision Script
+/// This script is assigned to the collider (Trigger) of the weapon
+/// and is responsible for passing the data from the other collider to it
 /// </summary>
 public class OnSwordCollision : MonoBehaviour
 {
-    // Referencia al arma a la que perteneces este collider
+    // Reference to the weapon to which this collider belongs
     public Sword sword;
-    
-    // OnTriggerEnter se dispara y llama al respectivo metodo de su arma
+
+    // OnTriggerEnter fires and calls the respective method of the weapon
     private void OnTriggerEnter(Collider other)
     {
         sword.OnCollision(other);

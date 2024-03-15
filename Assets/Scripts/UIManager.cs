@@ -3,8 +3,8 @@ using UnityEngine.UI;
 
 /// <summary>
 /// UIManager Script
-/// Es el encargado de controlar el estado general de la UI
-/// En el caso de este juego contempla referencias a los dos unicos elementos del juego
+/// Is in charge of controlling the general state of the UI
+/// In the case of this game, it includes references to the only two elements of the game
 /// </summary>
 public class UIManager : MonoBehaviour
 {
@@ -31,14 +31,15 @@ public class UIManager : MonoBehaviour
     #endregion
 
     #region GENERAL REFERENCES
-    // En este caso y para simplificar las variables son publicas y asignadas por inspector
-    // En caso de ser necesario se pueden volver privadas y con sus respectivos Gets y Sets
 
-    // Referencia al panel de lobby
+    // In this case and to simplify the variables are public and assigned by inspector
+    // If necessary, they can be made private and with their respective Gets and Sets
+
+    // Reference to the lobby panel
     public GameObject lobbyPanel;
 
-    // Referencia a la barra de vida en primera persona del jugador
-    // (Si el juego fuera mas complejo, lo mas probables es que esta referencia termine en su propia clase o View)
+    // Reference to the player's first-person HealthBar
+    // (If the game were more complex, this reference would most likely end up in its own class or View)
     public Slider firstPersonHealthSlider;
 
     #endregion
@@ -58,7 +59,7 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    // El juego inicia con el panel de lobby activo
+    // The game starts with the lobby panel active
     private void Start()
     {
         SwitchLobbyPanel(true);
@@ -68,7 +69,7 @@ public class UIManager : MonoBehaviour
 
     #region METHODS
 
-    // Este metodo activa el panel de lobby y desactiva el healthBar en primera persona y visebersa
+    // This method activates the lobby panel and disables the health bar in first perso
     public void SwitchLobbyPanel(bool value) 
     {
         lobbyPanel.SetActive(value);
